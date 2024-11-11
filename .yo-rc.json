@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "18.18.0",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.24.0"
+    },
+    "version": "1.20.0",
+    "libraryName": "dlsvue-sp-script-widget",
+    "libraryId": "3a594af8-948c-4e0d-9b89-5e809b7b9329",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "dlsvue-sp-script-widget",
+    "solutionShortDescription": "dlsvue-sp-script-widget description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

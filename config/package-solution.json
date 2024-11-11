@@ -1,0 +1,40 @@
+{
+	"$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+	"solution": {
+		"name": "dlsvue-sp-script-widget-client-side-solution",
+		"id": "3a594af8-948c-4e0d-9b89-5e809b7b9329",
+		"version": "0.0.1.0",
+		"includeClientSideAssets": true,
+		"skipFeatureDeployment": false,
+		"isDomainIsolated": false,
+		"developer": {
+			"name": "",
+			"websiteUrl": "",
+			"privacyUrl": "",
+			"termsOfUseUrl": "",
+			"mpnId": "Undefined-1.20.0"
+		},
+		"metadata": {
+			"shortDescription": {
+				"default": "dlsvue-sp-script-widget description"
+			},
+			"longDescription": {
+				"default": "dlsvue-sp-script-widget description"
+			},
+			"screenshotPaths": [],
+			"videoUrl": "",
+			"categories": []
+		},
+		"features": [
+			{
+				"title": "dlsvue-sp-script-widget Feature",
+				"description": "The feature that activates elements of the dlsvue-sp-script-widget solution.",
+				"id": "7aa39903-a8ac-4073-9347-ec221e3a2dba",
+				"version": "1.0.0.0"
+			}
+		]
+	},
+	"paths": {
+		"zippedPackage": "solution/dlsvue-sp-script-widget.sppkg"
+	}
+}
