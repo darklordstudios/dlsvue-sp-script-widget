@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-require-imports */
 'use strict';
 
 const build = require('@microsoft/sp-build-web');

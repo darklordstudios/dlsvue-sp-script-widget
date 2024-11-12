@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-undef */
 const fs = require('fs')
@@ -5,7 +6,7 @@ const process = require('process')
 
 const VERSION_TYPE = process.argv[2]
 const PACKAGE_SOLUTION = '/config/package-solution.json'
-const WEBPART_BASE = '/src/webparts'
+// const WEBPART_BASE = '/src/webparts'
 
 const getPackageVersion = (basePath) => {
   try {

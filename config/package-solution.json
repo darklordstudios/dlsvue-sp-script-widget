@@ -3,7 +3,7 @@
 	"solution": {
 		"name": "dlsvue-sp-script-widget-client-side-solution",
 		"id": "3a594af8-948c-4e0d-9b89-5e809b7b9329",
-		"version": "0.0.1.0",
+		"version": "0.0.3.0",
 		"includeClientSideAssets": true,
 		"skipFeatureDeployment": false,
 		"isDomainIsolated": false,
