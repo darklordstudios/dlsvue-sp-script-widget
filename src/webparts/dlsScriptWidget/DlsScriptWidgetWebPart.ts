@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable guard-for-in */
 /* eslint-disable prefer-const */
@@ -11,6 +12,7 @@ import {
   PropertyPaneDropdown,
   IPropertyPaneGroup
 } from '@microsoft/sp-property-pane';
+import { SPComponentLoader } from '@microsoft/sp-loader'
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { SPPermission } from '@microsoft/sp-page-context'
 import axios from 'axios'
@@ -36,11 +38,12 @@ export interface IDlsScriptWidgetWebPartProps {
 
 export default class DlsScriptWidgetWebPart extends BaseClientSideWebPart<IDlsScriptWidgetWebPartProps> {
   private _externalContent
-  private loadingIndicator: boolean = true
+  private loadingIndicator: boolean = false
   private listsdisabled: boolean = true
   private widgetsdisabled: boolean = true
   private lists: IPropertyPaneDropdownOption[]
   private widgets: IPropertyPaneDropdownOption[]
+  private msg: string = 'Welcome'
 
   public camelToDash = (name: string) => {
     return name
@@ -102,9 +105,9 @@ export default class DlsScriptWidgetWebPart extends BaseClientSideWebPart<IDlsSc
         const catalog = Boolean(j[i].isCatalog)
         const title = String(j[i].Title)
         const template = String(j[i].BaseTemplate)
-        if (!hidden && !catalog && template === '101') {
+        if (!hidden && !catalog && template === '100') {
           k.push({
-            key: j[i].Id,
+            key: title,
             text: title
           })
         }
@@ -133,7 +136,94 @@ export default class DlsScriptWidgetWebPart extends BaseClientSideWebPart<IDlsSc
     return k
   }
 
-  public render(): void {
+  private evalScript(elem: { text: any; textContent: any; innerHTML: any; attributes: string | any[]; }) {
+    const data = (elem.text || elem.textContent || elem.innerHTML || "")
+    const headtag = document.getElementsByClassName('head')[0] || document.documentElement
+    const scriptTag = document.createElement("script")
+    for (let i = 0; i < elem.attributes.length; i++) {
+      const attr = elem.attributes[i]
+      if (attr.name.toLowerCase() === 'onload') continue;
+      scriptTag.setAttribute(attr.name, attr.value)
+    }
+    scriptTag.type = scriptTag.src && scriptTag.src.length > 0 ? "pnp" : "text/javascript"
+    scriptTag.setAttribute('pnpname', this.properties.instanceid)
+    try {
+      scriptTag.appendChild(document.createTextNode(data))
+    } catch (e) {
+      scriptTag.text   = data
+    }
+    headtag.insertBefore(scriptTag, headtag.firstChild)
+  }
+
+  private async executeScript(element: HTMLElement) {
+    const headTag = document.getElementsByTagName('head')[0] || document.documentElement
+    const scriptTags = headTag.getElementsByTagName('script')
+    for (let i = 0; i < scriptTags.length; i++) {
+      const scriptTag = scriptTags[i]
+      if (scriptTag.hasAttribute('pnpname') && scriptTag.attributes['pnpname'].value === this.properties.instanceid ) {
+        headTag.removeChild(scriptTag)
+      }
+    }
+
+    (<any>window).ScriptGlobal = {}
+
+    const scripts = new Array<any>()
+    const children_nodes = element.getElementsByTagName("script")
+
+    for (let i = 0; children_nodes[i]; i++)  {
+      const child: any =  children_nodes[i]
+      if (!child.type || child.type.toLowerCase() === 'text/javascript' || child.type.toLowerCase() ===  'module') {
+        scripts.push(child)
+      }
+    }
+
+    const urls = new Array<any>()
+    const onloads = new Array<any>()
+    for (let i = 0; scripts[i]; i++) {
+      const scriptTag = scripts[i]
+      if (scriptTag.src && scriptTag.src.length > 0) {
+        urls.push(scriptTag.src)
+      }
+      if  (scriptTag.onload && scriptTag.onload.length > 0) {
+        onloads.push(scriptTag.onload)
+      }
+    }
+
+    let oldamd = null
+    if (window["define"] && window["define"].amd) {
+      oldamd = window["define"].amd
+      window["define"].amd =  null
+    }
+
+    for (let i = 0; i < urls.length; i++) {
+      try {
+        let scriptUrl = urls[i]
+        const prefix = scriptUrl.indexOf('?') === -1 ?  '?' : '&'
+        scriptUrl += prefix + 'pnp=' +   new Date().getTime()
+        await SPComponentLoader.loadScript(scriptUrl, { globalExportsName: 'ScriptGlobal' })
+      } catch (e) {
+        if (console.error) {
+          console.error(e)
+        }
+      }
+    }
+    
+    if (oldamd) {
+      window["define"].amd = oldamd
+    }
+
+    for (let i = 0; scripts[i]; i++) {
+      const scriptTag = scripts[i]
+      if (scriptTag.parentNode) { scriptTag.parentNode.removeChild(scriptTag) }
+      this.evalScript(scripts[i])
+    }
+
+    for (let i = 0; onloads[i]; i++) {
+      onloads[i]()
+    }
+  }
+
+  public async render(): Promise<void> {
     if (this.displayMode === DisplayMode.Read) {
       const renderDivID = "DLSWP_" + this.properties.instanceid
       const appId = "APP_" + this.properties.instanceid
@@ -141,6 +231,7 @@ export default class DlsScriptWidgetWebPart extends BaseClientSideWebPart<IDlsSc
       const renderDiv  = document.getElementById(renderDivID) as HTMLElement
       const content  =  this._externalContent
       renderDiv.innerHTML = this.getDOMElementHTML(appId, this.properties, this.properties.instanceid, content)
+      await this.executeScript(this.domElement)
     }
   }
 
@@ -204,14 +295,27 @@ export default class DlsScriptWidgetWebPart extends BaseClientSideWebPart<IDlsSc
     }
   }
 
+  protected async onPropertyPaneConfigurationStart(): Promise<void> {
+    this.context.propertyPane.refresh()
+    if (this.properties.widgetsSite === '') {
+      this.loadingIndicator = false
+      this.msg = 'Paste URL to Widget Site'
+    }
+  }
+
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     const GroupFields: IPropertyPaneGroup["groupFields"] = [
+      PropertyPaneTextField('msg', {
+        label: 'Message',
+        value: this.msg,
+        disabled: true
+      }),
       PropertyPaneTextField('widgetsSite', {
         label: 'Widget Site',
         value: this.properties.widgetsSite,
         description: "Paste Widget Site URL Here"
       }),
-      PropertyPaneDropdown('list', {
+      PropertyPaneDropdown('widgetsList', {
         label: "Select List",
         options: this.lists,
         selectedKey: this.properties.widgetsList,

@@ -1,9 +1,9 @@
 {
 	"$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
 	"solution": {
-		"name": "dlsvue-sp-script-widget-client-side-solution",
+		"name": "DLS VUE Script Loader Web Part",
 		"id": "3a594af8-948c-4e0d-9b89-5e809b7b9329",
-		"version": "0.0.3.0",
+		"version": "0.0.9.0",
 		"includeClientSideAssets": true,
 		"skipFeatureDeployment": false,
 		"isDomainIsolated": false,
