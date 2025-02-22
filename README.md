@@ -46,23 +46,24 @@ SharePoint web part context is added to the globalThis object to pass to loaded 
 
 - Clone this repository
 - Ensure that you are at the solution folder
+- Ensure you have installed the prerequisites for SharePoint Framework development. [Installed gulp, etc]
 - in the command-line run:
   - **npm install**
+  - **Update the make.ps1 and install.ps1 files for your install path and SharePoint site**
   - **.\make.ps1**
-  - **Update the install.ps1 file for your scenario**
   - **.\install.ps1**
 
 > Include any additional steps as needed.
 
 ## Features
 
-Description of the extension that expands upon high-level summary above.
+This webpart solution creates a web part that will allow you select a script to load into the web part.
 
-This extension illustrates the following concepts:
+You can create the scripts how you like but loading them to the webpart requires a few steps in SharePoint.
 
-- topic 1
-- topic 2
-- topic 3
+Your script files should be loaded into a document library. For my examples and the way I recommend doing it is to create folders [Yes, an exception] in the Site Assets library.
+Create HTML, CSS, and JS folders. Add your files to the respective folders.
+It is recommended to use .txt files for the main script code and to create this file to load scripts and css through code. An example solution can be found at: 
 
 > Notice that better pictures and documentation will increase the sample usage and the value you are providing for others. Thanks for your submissions advance.
 
