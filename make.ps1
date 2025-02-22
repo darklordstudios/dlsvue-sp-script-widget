@@ -6,7 +6,7 @@ function log {
   Write-Host " "
 }
 
-$versiontype  = 'Draft'
+$versiontype = 'Draft'
 
 function Show-VersioningMenu {
   Clear-Host
@@ -46,7 +46,7 @@ if ($versiontype -ne 'NONE') {
   log "Building Web Part"
   $script = ".\create-package-version.js"
   $cmd = 'node'
-  $path =  @($script)
+  $path = @($script)
   $version = @($versiontype)
   & $cmd  $path  $version
 
@@ -56,5 +56,5 @@ if ($versiontype -ne 'NONE') {
   gulp bundle --ship
   gulp package-solution --ship
 
-  log "Web Part Built. Upload to SharePoint"
+  log "Web Part Built. Upload to SharePoint or run install.ps1"
 }
