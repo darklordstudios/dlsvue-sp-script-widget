@@ -2,7 +2,9 @@
 
 ## Summary
 
-Short summary on functionality and used technologies.
+Used to load external scripts built with other frameworks such as VueJS.
+
+SharePoint web part context is added to the globalThis object to pass to loaded script.
 
 [picture of the solution in action, if possible]
 
@@ -19,7 +21,7 @@ Short summary on functionality and used technologies.
 
 ## Prerequisites
 
-> Any special pre-requisites?
+> @pnp PowerShell
 
 ## Solution
 
@@ -29,10 +31,10 @@ Short summary on functionality and used technologies.
 
 ## Version history
 
-| Version | Date             | Comments        |
-| ------- | ---------------- | --------------- |
-| 1.1     | March 10, 2021   | Update comment  |
-| 1.0     | January 29, 2021 | Initial release |
+| Version | Date                | Comments        |
+| ------- | ------------------- | --------------- |
+| 1.1     | February 22, 2025   | Update to globalThis  |
+| 1.0     | November, 2024      | Initial release |
 
 ## Disclaimer
 
@@ -46,7 +48,9 @@ Short summary on functionality and used technologies.
 - Ensure that you are at the solution folder
 - in the command-line run:
   - **npm install**
-  - **gulp serve**
+  - **.\make.ps1**
+  - **Update the install.ps1 file for your scenario**
+  - **.\install.ps1**
 
 > Include any additional steps as needed.
 
