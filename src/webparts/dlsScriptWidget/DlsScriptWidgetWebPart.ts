@@ -28,6 +28,7 @@ export interface IDlsScriptWidgetWebPartProps {
   loginname: string;
   email: string;
   siteadmin: boolean;
+  renderelement: string;
 }
 
 export default class DlsScriptWidgetWebPart extends BaseClientSideWebPart<IDlsScriptWidgetWebPartProps> {
@@ -39,48 +40,9 @@ export default class DlsScriptWidgetWebPart extends BaseClientSideWebPart<IDlsSc
   private widgets: IPropertyPaneDropdownOption[];
   private msg: string = "Welcome";
 
-  /* public camelToDash = (name: string) => {
-    return name
-      .replace(/\W+/g, '-')
-      .replace(/([a-z\d])([A-Z])/g, '$1-$2')
-      .toLowerCase()
-  } */
-
   constructor() {
     super();
   }
-
-  /* public getDOMElementHTML(appID: string, properties: any, instanceId: string, content: any): string {
-    const props = new Array<any>()
-    let propAttributes: string = ''
-    for (const k in properties) {
-      let prop: any = properties[k]
-      if (typeof prop === 'string')
-        props.push({
-          key: k,
-          value: prop
-        })
-      else if (typeof prop === 'number')
-        props.push({
-          key: k,
-          value: prop.toString()
-        })
-      else if (typeof prop === 'boolean')
-        props.push({
-          key: k,
-          value: prop ? 'true' : 'false'
-        })
-      else if (typeof prop === 'object')
-        props.push({
-          key: k,
-          value: JSON.stringify(prop)
-        })
-    }
-    props.forEach((prop) => {
-      propAttributes += `data-${this.camelToDash(prop.key)}="${encodeURIComponent(prop.value)}"`
-    })
-    return `<div id="${appID}" data-instance-id="${instanceId}" ${propAttributes}>${content}</div>`
-  } */
 
   private async getLists(): Promise<IPropertyPaneDropdownOption[]> {
     const k = new Array<IPropertyPaneDropdownOption>();
@@ -250,7 +212,7 @@ export default class DlsScriptWidgetWebPart extends BaseClientSideWebPart<IDlsSc
       const renderDiv = document.getElementById(renderDivID) as HTMLElement;
       const content = this._externalContent;
       // renderDiv.innerHTML = this.getDOMElementHTML(appId, this.properties, this.properties.instanceid, content)
-      renderDiv.innerHTML = `<div id="${appId}" data-instance-id="${this.properties.instanceid}>${content}</div>`;
+      renderDiv.innerHTML = `<div id="${appId}">${content}</div>`;
       await this.executeScript(this.domElement);
     }
   }
