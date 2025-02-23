@@ -38,6 +38,7 @@ export default class DlsScriptWidgetWebPart extends BaseClientSideWebPart<IDlsSc
   private widgetsdisabled: boolean = true;
   private lists: IPropertyPaneDropdownOption[];
   private widgets: IPropertyPaneDropdownOption[];
+  public widgetinfos = new Array<any>()
   private msg: string = "Welcome";
 
   constructor() {
@@ -84,10 +85,38 @@ export default class DlsScriptWidgetWebPart extends BaseClientSideWebPart<IDlsSc
     });
     const j = response.data.d.results;
     for (let i = 0; i < j.length; i++) {
-      k.push({
-        key: j[i].URL,
-        text: j[i].Title,
-      });
+      const status = j[i].Status
+      if (status === 'Production') {
+        k.push({
+          index: i,
+          key: j[i].URL,
+          text: j[i].Title
+        })
+        this.widgetinfos.push({
+          index: i,
+          url: j[i].URL,
+          title: j[i].Title,
+          status: j[i].Status,
+          element: j[i].Element,
+          details: j[i].Details
+        })
+      } else {
+        if (this.properties.siteadmin === true) {
+          k.push({
+            index: i,
+            key: j[i].URL,
+            text: j[i].Title
+          })
+          this.widgetinfos.push({
+            index: i,
+            url: j[i].URL,
+            title: j[i].Title,
+            status: j[i].Status,
+            element: j[i].Element,
+            details: j[i].Details
+          })
+        }
+      }
     }
     return k;
   }
